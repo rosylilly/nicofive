@@ -1,5 +1,5 @@
 require 'sinatra'
 
 get '/' do
-  'hi.'
+  'Hello, HTML5!'
 end
