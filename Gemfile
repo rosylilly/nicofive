@@ -16,4 +16,5 @@ gem 'compass'
 gem 'sprockets-sass'
 
 gem 'coffee-script'
+gem 'therubyracer-heroku'
 gem 'closure-compiler'
