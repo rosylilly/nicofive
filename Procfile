@@ -1,1 +1,1 @@
-web: bundle exec rake unicorn:start
+web: bundle exec unicron -c config/unicorn.rb
