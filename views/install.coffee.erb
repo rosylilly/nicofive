@@ -1,0 +1,15 @@
+NicoFiveHost = "<%= request.host + (request.port == 80 ? '' : ":#{request.port}") %>"
+
+src_url = "http://" + NicoFiveHost + "/assets/nicofive.js"
+scriptElement = document.createElement('script')
+scriptElement.src = src_url
+
+document.body.appendChild(scriptElement)
+
+src_url = "http://" + NicoFiveHost + "/assets/nicofive.css"
+styleElement = document.createElement('link')
+styleElement.rel = 'stylesheet'
+styleElement.type = 'text/css'
+styleElement.href = src_url
+
+document.getElementsByTagName('head')[0].appendChild(styleElement)

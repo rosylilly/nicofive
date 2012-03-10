@@ -11,6 +11,8 @@ gem 'sprockets'
 gem 'sprockets-helpers'
 gem 'sprockets-cache-redis'
 
+gem 'haml'
+
 gem 'sass'
 gem 'compass'
 gem 'sprockets-sass'

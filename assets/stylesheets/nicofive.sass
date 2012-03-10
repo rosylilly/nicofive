@@ -1,0 +1,43 @@
+
+@mixin round($radius)
+  border-radius: $radius
+  -webkit-border-radius: $radius
+  -moz-border-radius: $radius
+
+body
+  background: white
+
+#PAGEBODY
+  position: relative
+
+  #player 
+    margin-bottom: 20px
+    background: black
+    @include round(4px)
+
+    video
+      display: block
+      margin: 0 auto
+      width: 640px
+      height: 368px
+
+  #info
+    float: left
+    width: 50%
+  
+    h1
+      position: absolute
+      margin: 0
+      padding: 10px 10px 
+      top: 0
+      background: rgba(0,0,0,0.6)
+      color: white
+      font-size: 16px
+      @include round(4px 0 0 0)
+
+    p
+      padding: 0 10px
+      font-size: 12px
+
+  #options
+    width: 50%

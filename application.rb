@@ -1,4 +1,3 @@
-
 class Application < Sinatra::Base
   set :sprockets, Sprockets::Environment.new
 
@@ -17,7 +16,9 @@ class Application < Sinatra::Base
     sprockets.append_path 'vender/javascripts'
     sprockets.append_path 'vender/stylesheets'
 
-    sprockets.js_compressor = Closure::Compiler.new(:compilation_level => 'ADVANCED_OPTIMIZATIONS')
+    if ENV['RACK_ENV'] == 'production'
+      sprockets.js_compressor = Closure::Compiler.new(:compilation_level => 'ADVANCED_OPTIMIZATIONS')
+    end
 
     sprockets.cache = Sprockets::Cache::RedisStore.new(redis, 'sprockets')
   end
@@ -25,6 +26,12 @@ class Application < Sinatra::Base
   helpers Sprockets::Helpers
 
   get '/' do
-    'hello'
+    haml :index
+  end
+
+  get '/install.user.js' do
+    content = erb(:install_prefix) + coffee(erb(:"install.coffee"))
+    content_type 'application/javascript'
+    return content
   end
 end
