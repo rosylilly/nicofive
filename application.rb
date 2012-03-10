@@ -12,6 +12,7 @@ class Application < Sinatra::Base
     end
     sprockets.append_path 'assets/javascripts'
     sprockets.append_path 'assets/stylesheets'
+    sprockets.append_path 'assets/images'
 
     sprockets.append_path 'vender/javascripts'
     sprockets.append_path 'vender/stylesheets'

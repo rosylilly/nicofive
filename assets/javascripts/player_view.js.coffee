@@ -14,6 +14,7 @@ class PlayerView
     @player = @insert('div')
     @player.id = 'player'
     @video = @insert('video', player)
+    @video.poster = 'http://nicofive.heroku.com/assets/loading.gif'
     @info = @insert('div')
     @info.id = 'info'
     @title = @insert('h1', info)
