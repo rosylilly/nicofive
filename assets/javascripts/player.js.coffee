@@ -7,6 +7,7 @@ class Player
     )
     @setEvents()
     @pause()
+    NicoFive.setting.restoreSettings()
 
   setEvents: =>
     @onVideo 'canplaythrough', ->

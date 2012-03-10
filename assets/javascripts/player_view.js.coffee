@@ -68,9 +68,23 @@ class PlayerView
       e.preventDefault()
       NicoFive.player.pause()
 
+    document.addEventListener 'keydown', (e)=>
+      switch e.keyCode
+        when 70
+          @toggleFullScreen()
+          break
+        when 32
+          if @video.paused
+            @video.play()
+          else
+            @video.pause()
+          break
+        else
+          console.log e.keyCode
+
     @fullscreen.addEventListener 'click', (e)=>
       e.preventDefault()
-      jQuery(@player).toggleClass('fullscreen')
+      @toggleFullScreen()
 
     seek_event_func = (e) =>
       e.preventDefault()
@@ -78,26 +92,31 @@ class PlayerView
       per = point / jQuery(@seek_base).width()
       NicoFive.player.seekPer(per)
 
-    @seek_loaded.addEventListener 'click', seek_event_func
-    @seek_current.addEventListener 'click', seek_event_func
-
-    @mousestate = false
+    @seeking = false
+    @seek_prev_paused = false
 
     @seek_loaded.addEventListener 'mousedown', (e) =>
-      @mousestate = true
+      e.preventDefault()
+      @seeking = true
+      @seek_prev_paused = @video.paused
+      @video.pause()
+      seek_event_func(e)
+      jQuery(document).mousemove(seek_event_func).mouseup(=>
+        @seeking = false
+        jQuery(document).unbind('mousemove', seek_event_func)
+        @video.play() if !@seek_prev_paused
+      )
     @seek_current.addEventListener 'mousedown', (e) =>
-      @mousestate = true
-    @seek_loaded.addEventListener 'mouseup', (e) =>
-      @mousestate = false
-    @seek_current.addEventListener 'mouseup', (e) =>
-      @mousestate = false
-
-    @seek_loaded.addEventListener 'mousemove', (e) =>
-      if @mousestate
-        seek_event_func(e)
-    @seek_current.addEventListener 'mousemove', (e) =>
-      if @mousestate
-        seek_event_func(e)
+      e.preventDefault()
+      @seeking = true
+      @seek_prev_paused = @video.paused
+      @video.pause()
+      seek_event_func(e)
+      jQuery(document).mousemove(seek_event_func).mouseup(=>
+        @seeking = false
+        jQuery(document).unbind('mousemove', seek_event_func)
+        @video.play() if !@seek_prev_paused
+      )
   
   getOffsetLeft: (element) =>
     element.offsetLeft + if element.offsetParent then @getOffsetLeft(element.offsetParent) else 0
@@ -121,6 +140,19 @@ class PlayerView
     width = jQuery(@seek_base).width() * per
     jQuery(@seek_loaded).width(width + 'px')
 
+  toggleFullScreen: =>
+    if NicoFive.setting.fullscreen == 'true'
+      @cancelFullScreen()
+    else
+      @fullScreen()
+    
+  fullScreen: =>
+    jQuery(@player).addClass('fullscreen')
+    NicoFive.setting?.set('fullscreen', 'true')
+
+  cancelFullScreen: =>
+    jQuery(@player).removeClass('fullscreen')
+    NicoFive.setting?.set('fullscreen', 'false')
  
 NicoFive.add_initialize_hook ->
   NicoFive.set 'playerView', new PlayerView
