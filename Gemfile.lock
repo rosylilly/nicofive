@@ -2,6 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     chunky_png (1.2.5)
+    closure-compiler (1.1.6)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -14,12 +15,15 @@ GEM
       multi_json (~> 1.0)
     fssm (0.2.8.1)
     hike (1.2.1)
+    hiredis (0.3.2)
     kgio (2.7.2)
     multi_json (1.1.0)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
     raindrops (0.8.0)
+    rake (0.9.2.2)
+    redis (2.2.2)
     sass (3.1.15)
     sinatra (1.3.2)
       rack (~> 1.3, >= 1.3.6)
@@ -30,6 +34,7 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    sprockets-cache-redis (0.0.3)
     sprockets-helpers (0.3.0)
       sprockets (~> 2.0)
     sprockets-sass (0.7.0)
@@ -45,11 +50,16 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  closure-compiler
   coffee-script
   compass
+  hiredis (~> 0.3.1)
+  rake
+  redis (~> 2.2.0)
   sass
   sinatra (~> 1.3.2)
   sprockets
+  sprockets-cache-redis
   sprockets-helpers
   sprockets-sass
   unicorn
