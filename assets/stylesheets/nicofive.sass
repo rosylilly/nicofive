@@ -6,6 +6,13 @@
 
 body
   background: white
+  color: #333
+
+#PAGEHEADER
+  margin-bottom: 50px
+
+  #head_search_form
+    float: right
 
 #PAGEBODY
   position: relative
@@ -13,15 +20,26 @@ body
   #player 
     position: relative
     margin-bottom: 20px
-    padding: 20px 0
+    padding: 1px 0 4px 0
     background: black
     @include round(4px)
 
     video
       display: block
       margin: 0 auto
+      padding: 0
       width: 640px
       height: 368px
+      -webkit-transition: all linear 0.1s
+
+    &.fullscreen
+
+      video
+        width: 982px
+        height: 553px
+
+      #controls a#fullscreen
+        opacity: 0.3
 
     #loading
       position: absolute
@@ -35,21 +53,85 @@ body
     #controls
       position: absolute
       width: 100%
+      height: 23px
       bottom: 0
+      background: rgba(0,0,0,0.8)
+      -webkit-transition: all linear 0.1s
+      @include round(0 0 4px 4px)
+
+      #seek_base
+        position: absolute
+        height: 3px
+        top: 0
+        width: 100%
+        -webkit-transition: all linear 0.1s
+
+        &:hover 
+          height: 15px
+          top: -12px
+
+        #seek_loaded, #seek_current
+          position: absolute
+          height: 100%
+          top: 0
+          opacity: 0.7
+
+        #seek_loaded
+          background: white
+
+        #seek_current
+          background: red
       
-      a 
+      a, span 
         display: inline-block
+        position: absolute
+        bottom: 0
+        width: 30px
         height: 20px
-        background: white
+        background: no-repeat center center
+        -webkit-transition: all linear 0.1s
 
         &#play, &#pause
           width: 60px
+          left: 0
 
         &#play
           background-image: url('http://nicofive.heroku.com/assets/play.png')
 
         &#pause
           background-image: url('http://nicofive.heroku.com/assets/pause.png')
+
+        &#fullscreen
+          right: 0
+          background-image: url('http://nicofive.heroku.com/assets/fullscreen.png')
+
+        &#time
+          left: 60px
+          font-size: 12px
+          font-family: monospace
+          line-height: 20px
+          width: auto
+          color: white
+
+    &.controls_hidden
+      #controls
+        height: 3px
+
+        #seek_loaded, #seek_current
+          @include round(0 0 4px 4px)
+
+        a, span
+          bottom: -20px
+
+    &.controls_hidden:hover
+      #controls
+        height: 23px
+
+        #seek_loaded, #seek_current
+          @include round(0)
+
+        a, span
+          bottom: 0
 
   #info
     float: left
