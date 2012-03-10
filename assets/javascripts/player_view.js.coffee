@@ -13,14 +13,32 @@ class PlayerView
   render: =>
     @player = @insert('div')
     @player.id = 'player'
-    @video = @insert('video', player)
-    @video.poster = 'http://nicofive.heroku.com/assets/loading.gif'
+
+    @video = @insert('video', @player)
+    @video.poster = Video?.thumbnail
+
+    @loading = @insert('img', @player)
+    @loading.id = 'loading'
+    @loading.src = 'http://nicofive.heroku.com/assets/loading.gif'
+
+    @controls = @insert('div', @player)
+    @controls.id = 'controls'
+
+    @play = @insert('a', @controls)
+    @play.id = 'play'
+
+    @pause = @insert('a', @controls)
+    @pause.id = 'pause'
+
     @info = @insert('div')
     @info.id = 'info'
-    @title = @insert('h1', info)
+
+    @title = @insert('h1', @info)
     @title.innerText = NicoFive.watchInfo.title
-    @description = @insert('p', info)
+
+    @description = @insert('p', @info)
     @description.innerHTML = NicoFive.watchInfo.description
+
     @options = @insert('div')
     @options.id = 'options'
  

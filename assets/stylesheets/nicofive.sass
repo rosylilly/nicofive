@@ -11,7 +11,9 @@ body
   position: relative
 
   #player 
+    position: relative
     margin-bottom: 20px
+    padding: 20px 0
     background: black
     @include round(4px)
 
@@ -20,6 +22,34 @@ body
       margin: 0 auto
       width: 640px
       height: 368px
+
+    #loading
+      position: absolute
+      display: block
+      width: 15px
+      height: 15px
+      top: 50%
+      left: 50%
+      margin: -7.5px 0 0 -7.5px
+
+    #controls
+      position: absolute
+      width: 100%
+      bottom: 0
+      
+      a 
+        display: inline-block
+        height: 20px
+        background: white
+
+        &#play, &#pause
+          width: 60px
+
+        &#play
+          background-image: url('http://nicofive.heroku.com/assets/play.png')
+
+        &#pause
+          background-image: url('http://nicofive.heroku.com/assets/pause.png')
 
   #info
     float: left
