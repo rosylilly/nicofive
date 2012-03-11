@@ -14,17 +14,18 @@ class Player
       jQuery(NicoFive.playerView.loading).fadeOut()
 
     interval = =>
-      return if @video.duration == 0 || @video.duration == undefined
+      return if @video.duration == 0 || @video.duration == undefined || @video.seekable.length < 1
       NicoFive.playerView.setLoaded(@video.seekable.end(0) * 1.0 / @video.duration)
 
     @interval_id = setInterval(interval, 200)
 
     @onVideo 'click', (e) =>
       e.preventDefault()
-      if !@video.paused
-        @video.pause()
-      else
+      e.stopPropagation()
+      if @video.paused
         @video.play()
+      else
+        @video.pause()
 
     @control_interval = null
     control_func = =>
@@ -43,6 +44,9 @@ class Player
       jQuery(NicoFive.playerView.player).removeClass('controls_hidden')
       clearTimeout(@control_interval) if @control_interval
 
+    @onVideo 'ended', =>
+      @video.pause()
+
     @onVideo 'load', =>
       clearInterval @interval_id
 
@@ -51,6 +55,10 @@ class Player
 
     @onVideo 'timeupdate', =>
       NicoFive.playerView.setSeek(@video.currentTime * 1.0 / @video.duration)
+
+    @onVideo 'volumechange', =>
+      NicoFive.playerView.setVolume(@video.volume)
+      NicoFive.setting.set('volume', @video.volume.toString())
 
   onVideo: (name, func)=>
     @video.addEventListener(name, func)
@@ -63,6 +71,23 @@ class Player
 
   seekPer: (per) =>
     @video.currentTime = @video.duration * per
+
+  toggleLoop: =>
+    if @video.loop
+      NicoFive.playerView.deactiveLoop()
+    else
+      NicoFive.playerView.activeLoop()
+    @video.loop = !@video.loop
+
+  toggleMute: =>
+    if @video.muted
+      NicoFive.playerView.deactiveMute()
+    else
+      NicoFive.playerView.activeMute()
+    @video.muted = !@video.muted
+
+  setVolume: (vol) =>
+    @video.volume = parseFloat(vol)
 
 NicoFive.add_initialize_hook ->
   NicoFive.set 'player', new Player(NicoFive.watchInfo.video_id)

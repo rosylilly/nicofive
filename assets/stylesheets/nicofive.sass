@@ -66,7 +66,7 @@ body
         width: 100%
         -webkit-transition: all linear 0.1s
 
-        &:hover 
+        &:hover, &.seeking
           height: 15px
           top: -12px
 
@@ -80,7 +80,7 @@ body
           background: white
 
         #seek_current
-          background: red
+          background: #4682b4
       
       a, span 
         display: inline-block
@@ -101,21 +101,65 @@ body
         &#pause
           background-image: url('http://nicofive.heroku.com/assets/pause.png')
 
+        &#first
+          left: 60px
+          background-image: url('http://nicofive.heroku.com/assets/first.png')
+
+        &#time
+          left: 130px
+          font-size: 6px
+          font-family: monospace
+          line-height: 20px
+          vertical-align: center
+          width: auto
+          color: white
+
+        &#volume
+          left: 90px
+          background-image: url('http://nicofive.heroku.com/assets/volume.png')
+          background-position: 7px center 
+          overflow: hidden
+
+          &.active
+            background-image: url('http://nicofive.heroku.com/assets/volume_mute.png')
+
+          &:hover, &.voluming
+            width: 150px
+
+            & + span#time
+              left: 250px
+
+          #volume_base
+            left: 45px
+            width: 90px
+
+            #volume_bar, #volume_current
+              top: 8px
+              left: 0
+              height: 4px
+
+            #volume_bar
+              width: 90px
+              background: gray
+
+            #volume_current
+              background: #4682b4
+
+        &#loop
+          right: 30px
+          background-image: url('http://nicofive.heroku.com/assets/loop.png')
+
+          &.active
+            opacity: 0.3
+
         &#fullscreen
           right: 0
           background-image: url('http://nicofive.heroku.com/assets/fullscreen.png')
 
-        &#time
-          left: 60px
-          font-size: 12px
-          font-family: monospace
-          line-height: 20px
-          width: auto
-          color: white
-
     &.controls_hidden
       #controls
         height: 3px
+        overflow: hidden
 
         #seek_loaded, #seek_current
           @include round(0 0 4px 4px)
@@ -126,6 +170,7 @@ body
     &.controls_hidden:hover
       #controls
         height: 23px
+        overflow: visible
 
         #seek_loaded, #seek_current
           @include round(0)
@@ -145,7 +190,7 @@ body
       background: rgba(0,0,0,0.6)
       color: white
       font-size: 16px
-      @include round(4px 0 0 0)
+      @include round(4px 0 4px 0)
 
     p
       padding: 0 10px

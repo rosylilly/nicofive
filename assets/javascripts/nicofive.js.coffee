@@ -6,8 +6,8 @@
 #= require watch_info
 #= require cleaning
 #= require player_view
-#= require player_setting
 #= require player
+#= require player_setting
 
 jQuery.noConflict()
 if !location.search.match(/nofive=1/)

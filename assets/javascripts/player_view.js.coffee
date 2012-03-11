@@ -32,11 +32,29 @@ class PlayerView
     @pause.id = 'pause'
     jQuery(@pause).hide()
 
-    @fullscreen = @insert('a', @controls)
-    @fullscreen.id = 'fullscreen'
+    @first = @insert('a', @controls)
+    @first.id = 'first'
+
+    @volume = @insert('span', @controls)
+    @volume.id = 'volume'
+
+    @volume_base = @insert('span', @volume)
+    @volume_base.id = 'volume_base'
+
+    @volume_bar = @insert('span', @volume_base)
+    @volume_bar.id = 'volume_bar'
+
+    @volume_current = @insert('span', @volume_base)
+    @volume_current.id = 'volume_current'
 
     @time = @insert('span', @controls)
     @time.id = 'time'
+
+    @fullscreen = @insert('a', @controls)
+    @fullscreen.id = 'fullscreen'
+
+    @loop = @insert('a', @controls)
+    @loop.id = 'loop'
 
     @seek_base = @insert('div', @controls)
     @seek_base.id = 'seek_base'
@@ -67,13 +85,27 @@ class PlayerView
     @pause.addEventListener 'click', (e)->
       e.preventDefault()
       NicoFive.player.pause()
+ 
+    @first.addEventListener 'click', (e)->
+      e.preventDefault()
+      NicoFive.player.seekPer(0)
+ 
+    @volume.addEventListener 'click', (e)->
+      e.preventDefault()
+      NicoFive.player.toggleMute()
 
     document.addEventListener 'keydown', (e)=>
       switch e.keyCode
         when 70
+          e.preventDefault()
           @toggleFullScreen()
           break
+        when 76
+          e.preventDefault()
+          NicoFive.player.toggleLoop()
+          break
         when 32
+          e.preventDefault()
           if @video.paused
             @video.play()
           else
@@ -86,37 +118,64 @@ class PlayerView
       e.preventDefault()
       @toggleFullScreen()
 
+    @loop.addEventListener 'click', (e)=>
+      e.preventDefault()
+      NicoFive.player.toggleLoop()
+
     seek_event_func = (e) =>
       e.preventDefault()
       point = e.clientX - @getOffsetLeft(@seek_base)
       per = point / jQuery(@seek_base).width()
       NicoFive.player.seekPer(per)
 
-    @seeking = false
+    seek_end_event_func = (e) =>
+      @video.play() if !@seek_prev_paused
+      jQuery(@seek_base).removeClass('seeking')
+      jQuery(document).unbind('mousemove', seek_event_func)
+      jQuery(document).unbind('mouseup', seek_end_event_func)
+
     @seek_prev_paused = false
 
     @seek_loaded.addEventListener 'mousedown', (e) =>
       e.preventDefault()
-      @seeking = true
+      e.stopPropagation()
+      jQuery(@seek_base).addClass('seeking')
       @seek_prev_paused = @video.paused
       @video.pause()
       seek_event_func(e)
-      jQuery(document).mousemove(seek_event_func).mouseup(=>
-        @seeking = false
-        jQuery(document).unbind('mousemove', seek_event_func)
-        @video.play() if !@seek_prev_paused
-      )
+      jQuery(document).mousemove(seek_event_func).mouseup(seek_end_event_func)
     @seek_current.addEventListener 'mousedown', (e) =>
       e.preventDefault()
-      @seeking = true
+      e.stopPropagation()
+      jQuery(@seek_base).addClass('seeking')
       @seek_prev_paused = @video.paused
       @video.pause()
       seek_event_func(e)
-      jQuery(document).mousemove(seek_event_func).mouseup(=>
-        @seeking = false
-        jQuery(document).unbind('mousemove', seek_event_func)
-        @video.play() if !@seek_prev_paused
-      )
+      jQuery(document).mousemove(seek_event_func).mouseup(seek_end_event_func)
+
+    volume_event_func = (e) =>
+      e.preventDefault()
+      e.stopPropagation()
+      point = e.clientX - @getOffsetLeft(@volume_base)
+      per = point / jQuery(@volume_base).width()
+      per = 0 if per < 0
+      per = 1 if per > 1
+      NicoFive.player.setVolume(per)
+
+    @volume_base.addEventListener 'click', (e) =>
+      e.preventDefault()
+      e.stopPropagation()
+
+    @volume_base.addEventListener 'mousedown', (e) =>
+      e.preventDefault()
+      e.stopPropagation()
+      volume_event_func(e)
+      jQuery(@volume).addClass('voluming')
+      jQuery(document).mousemove(volume_event_func).mouseup (e)=>
+        e.stopPropagation()
+        jQuery(@volume).removeClass('voluming')
+        jQuery(document).unbind('mousemove', volume_event_func)
+      
   
   getOffsetLeft: (element) =>
     element.offsetLeft + if element.offsetParent then @getOffsetLeft(element.offsetParent) else 0
@@ -153,6 +212,27 @@ class PlayerView
   cancelFullScreen: =>
     jQuery(@player).removeClass('fullscreen')
     NicoFive.setting?.set('fullscreen', 'false')
+
+  activeLoop: =>
+    jQuery(@loop).addClass('active')
+    NicoFive.setting?.set('loop', 'true')
+
+  deactiveLoop: =>
+    jQuery(@loop).removeClass('active')
+    NicoFive.setting?.set('loop', 'false')
+
+  activeMute: =>
+    jQuery(@volume).addClass('active')
+    NicoFive.setting?.set('mute', 'true')
+
+  deactiveMute: =>
+    jQuery(@volume).removeClass('active')
+    NicoFive.setting?.set('mute', 'false')
+
+  setVolume: (vol) =>
+    vol = @video.volume if vol?
+    vol = vol * 100
+    jQuery(@volume_current).width(vol + '%')
  
 NicoFive.add_initialize_hook ->
   NicoFive.set 'playerView', new PlayerView
