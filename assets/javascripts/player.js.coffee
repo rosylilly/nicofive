@@ -87,6 +87,8 @@ class Player
     @video.muted = !@video.muted
 
   setVolume: (vol) =>
+    vol = 0 if vol < 0
+    vol = 1 if vol > 1
     @video.volume = parseFloat(vol)
 
 NicoFive.add_initialize_hook ->

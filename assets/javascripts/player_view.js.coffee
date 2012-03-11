@@ -71,11 +71,21 @@ class PlayerView
     @title = @insert('h1', @info)
     @title.innerText = NicoFive.watchInfo.title
 
+    @tags = @insert('p', @info)
+    @tags.id = 'tags'
+    for tag in NicoFive.watchInfo.tags
+      @tags.appendChild tag
+      @tags.innerHTML += ' '
+
     @description = @insert('p', @info)
+    @description.id = 'description'
     @description.innerHTML = NicoFive.watchInfo.description
 
     @options = @insert('div')
     @options.id = 'options'
+
+    @footer = @insert('div')
+    @footer.id = 'footer'
 
   setEvents: =>
     @play.addEventListener 'click', (e)->
@@ -100,9 +110,17 @@ class PlayerView
           e.preventDefault()
           @toggleFullScreen()
           break
+        when 72
+          e.preventDefault()
+          NicoFive.player.seekPer(0)
+          break
         when 76
           e.preventDefault()
           NicoFive.player.toggleLoop()
+          break
+        when 77
+          e.preventDefault()
+          NicoFive.player.toggleMute()
           break
         when 32
           e.preventDefault()
@@ -111,7 +129,14 @@ class PlayerView
           else
             @video.pause()
           break
+        when 75
+          NicoFive.player.setVolume(@video.volume + 0.1)
+          break
+        when 74
+          NicoFive.player.setVolume(@video.volume - 0.1)
+          break
         else
+          console.log e
           console.log e.keyCode
 
     @fullscreen.addEventListener 'click', (e)=>
