@@ -17,4 +17,4 @@ class NicoFiveCore
     for hook in @initialize_hooks
       hook.apply()
 
-window.NicoFive = new NicoFiveCore
+NicoFive = new NicoFiveCore
