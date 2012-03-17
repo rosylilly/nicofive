@@ -17,10 +17,7 @@ class Application < Sinatra::Base
     sprockets.append_path 'vender/javascripts'
     sprockets.append_path 'vender/stylesheets'
 
-    if ENV['RACK_ENV'] == 'production'
-      #sprockets.js_compressor = Closure::Compiler.new(:compilation_level => 'ADVANCED_OPTIMIZATIONS')
-    end
-
+    sprockets.js_compressor = Closure::Compiler.new(:compilation_level => 'SIMPLE_OPTIMIZATIONS')
     sprockets.cache = Sprockets::Cache::RedisStore.new(redis, 'sprockets')
   end
 
