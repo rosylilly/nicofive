@@ -107,19 +107,15 @@ class PlayerView
     document.addEventListener 'keydown', (e)=>
       switch e.keyCode
         when 70
-          e.preventDefault()
           @toggleFullScreen()
           break
         when 72
-          e.preventDefault()
           NicoFive.player.seekPer(0)
           break
         when 76
-          e.preventDefault()
           NicoFive.player.toggleLoop()
           break
         when 77
-          e.preventDefault()
           NicoFive.player.toggleMute()
           break
         when 32
@@ -135,9 +131,6 @@ class PlayerView
         when 74
           NicoFive.player.setVolume(@video.volume - 0.1)
           break
-        else
-          console.log e
-          console.log e.keyCode
 
     @fullscreen.addEventListener 'click', (e)=>
       e.preventDefault()
