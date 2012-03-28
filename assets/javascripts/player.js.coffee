@@ -14,8 +14,8 @@ class Player
       jQuery(NicoFive.playerView.loading).fadeOut()
 
     interval = =>
-      return if @video.duration == 0 || @video.duration == undefined || @video.seekable.length < 1
-      NicoFive.playerView.setLoaded(@video.seekable.end(0) * 1.0 / @video.duration)
+      return if @video.duration == 0 || @video.duration == undefined || @video.buffered.length < 1
+      NicoFive.playerView.setLoaded(@video.buffered.end(0) * 1.0 / @video.duration)
 
     @interval_id = setInterval(interval, 200)
 
